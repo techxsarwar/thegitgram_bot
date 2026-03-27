@@ -1,0 +1,5 @@
+fastapi
+aiogram
+httpx
+python-dotenv
+uvicorn
