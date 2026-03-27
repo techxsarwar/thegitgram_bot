@@ -3,3 +3,6 @@ aiogram
 httpx
 python-dotenv
 uvicorn
+sqlalchemy
+databases
+aiosqlite
