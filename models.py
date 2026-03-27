@@ -1,14 +1,14 @@
-from sqlalchemy import Column, String, BigInteger
+from sqlalchemy import Column, String, BigInteger, Integer, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
 
 Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
     
-    telegram_id = Column(BigInteger, primary_key=True)
-    github_token = Column(String)  # We'll store it as a string for now as per instructions
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    telegram_id = Column(BigInteger, unique=True, nullable=False)
+    github_token = Column(String)
     username = Column(String)
 
 import os
