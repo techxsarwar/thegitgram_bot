@@ -93,7 +93,7 @@ async def process_token(message: Message, state: FSMContext):
 # --- HELPERS ---
 def get_user_by_github_login(github_login: str):
     with Session(engine) as session:
-        return session.query(User).filter_by(username=github_login).first()
+        return session.query(User).filter(User.username.ilike(github_login)).first()
 
 def get_user_by_telegram_id(telegram_id: int):
     with Session(engine) as session:
@@ -209,17 +209,22 @@ async def handle_github_webhook(request: Request):
     payload = await request.json()
     action = payload.get("action")
     
+    # Identify the Repository Owner
+    owner_name = payload.get("repository", {}).get("owner", {}).get("login")
+    print(f"🚀 WEBHOOK RECEIVED! Repo Owner: {owner_name}")
+    
     if "issue" in payload and action in ["opened", "created"]:
         repo_name = payload["repository"]["name"]
-        owner_name = payload["repository"]["owner"]["login"]
         issue_title = payload["issue"]["title"]
         issue_num = payload["issue"]["number"]
         
-        # Route to Correct User
+        # Route to Correct User (Case-Insensitive)
         user = get_user_by_github_login(owner_name)
         if not user:
-            print(f"No matching user found for GitHub login: {owner_name}")
+            print(f"❌ DATABASE MATCH FAILED: Could not find user '{owner_name}' in Supabase.")
             return {"status": "ignored"}
+
+        print(f"✅ MATCH FOUND: Sending to Telegram ID {user.telegram_id}")
 
         if "comment" in payload:
             author = payload["comment"]["user"]["login"]
@@ -241,7 +246,7 @@ async def handle_github_webhook(request: Request):
             )
             issue_map[sent_msg.message_id] = {"owner": owner_name, "repo": repo_name, "issue_number": issue_num}
         except Exception as e:
-            print(f"Error sending message: {e}")
+            print(f"Error sending message to {user.telegram_id}: {e}")
             
     return {"status": "received"}
 
