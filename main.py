@@ -35,17 +35,9 @@ issue_map = {} # Maps Telegram message_id -> GitHub Issue Data
 # --- APP SETUP & LIFESPAN ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # No polling needed for webhooks!
-    yield
-    await bot.session.close()
-
-app = FastAPI(lifespan=lifespan)
-
-@app.on_event("startup")
-async def on_startup():
-    # Set the webhook URL (ensure this matches your Render URL)
+    # This runs when the bot starts
     webhook_url = "https://thegitgram-bot.onrender.com/tg-webhook"
-    await bot.set_webhook(url=webhook_url)
+    await bot.set_webhook(url=webhook_url, drop_pending_updates=True)
     print(f"🚀 Telegram Webhook set to: {webhook_url}")
     
     # Magic Line for the database
@@ -54,6 +46,13 @@ async def on_startup():
         print("✅ Database connected and tables verified!")
     except Exception as e:
         print(f"❌ DATABASE CONNECTION FAILED: {e}")
+        
+    yield  # The bot runs here...
+    
+    # This runs when the bot shuts down
+    await bot.session.close()
+
+app = FastAPI(lifespan=lifespan)
 
 # --- WEBHOOK ENDPOINTS ---
 @app.post("/tg-webhook")
