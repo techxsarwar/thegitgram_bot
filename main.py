@@ -11,15 +11,19 @@ from aiogram.filters import Command
 import httpx
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
-from models import User, init_db, engine
+from models import User, Base, engine
 
 # Load environment variables
 load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 
-# Initialize DB
-init_db()
+# Try to create tables right at the start
+try:
+    Base.metadata.create_all(bind=engine)
+    print("✅ Database connected and tables verified!")
+except Exception as e:
+    print(f"❌ DATABASE CONNECTION FAILED: {e}")
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
