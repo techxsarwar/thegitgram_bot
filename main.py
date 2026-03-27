@@ -193,13 +193,37 @@ async def reply_to_github(message: Message):
         else:
             await message.reply(f"❌ Failed: {response.status_code} - {response.text[:50]}")
 
-# --- INCOMING: GitHub to Telegram ---
+from aiogram import Bot, Dispatcher, F, Router, types
+
+# --- INCOMING: Telegram Webhook ---
+@app.post("/tg-webhook")
+async def telegram_webhook(request: Request):
+    """
+    Handle incoming Telegram updates via Webhook.
+    """
+    update = types.Update(**await request.json())
+    await dp.feed_update(bot, update)
+    return {"status": "ok"}
+
+# --- LIFESPAN & STARTUP ---
+@app.on_event("startup")
+async def on_startup():
+    # Set the webhook URL (ensure this matches your Render URL)
+    webhook_url = "https://thegitgram-bot.onrender.com/tg-webhook"
+    await bot.set_webhook(url=webhook_url)
+    print(f"🚀 Telegram Webhook set to: {webhook_url}")
+    
+    # Magic Line for the database
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database connected and tables verified!")
+    except Exception as e:
+        print(f"❌ DATABASE CONNECTION FAILED: {e}")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Starting Telegram polling...", flush=True)
-    task = asyncio.create_task(dp.start_polling(bot))
+    # No polling needed for webhooks!
     yield
-    task.cancel()
     await bot.session.close()
 
 app = FastAPI(lifespan=lifespan)
