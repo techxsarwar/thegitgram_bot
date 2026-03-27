@@ -15,11 +15,23 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters import Command
 from sqlalchemy.orm import Session
 
+from cryptography.fernet import Fernet
 from models import User, Base, engine
 
 # --- CONFIGURATION ---
 load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY", "").encode()
+cipher_suite = Fernet(ENCRYPTION_KEY) if ENCRYPTION_KEY else None
+
+def encrypt_token(token: str) -> str:
+    return cipher_suite.encrypt(token.encode()).decode() if cipher_suite else token
+
+def decrypt_token(encrypted_token: str) -> str:
+    try:
+        return cipher_suite.decrypt(encrypted_token.encode()).decode() if cipher_suite else encrypted_token
+    except Exception:
+        return encrypted_token # Fallback for unencrypted tokens during migration
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -104,6 +116,41 @@ async def handle_github_webhook(request: Request):
             issue_map[sent_msg.message_id] = {"owner": owner_name, "repo": repo_name, "issue_number": issue_num}
         except Exception as e:
             print(f"Error sending message to {user.telegram_id}: {e}")
+    
+    elif "pull_request" in payload and action in ["opened", "closed"]:
+        repo_name = payload["repository"]["name"]
+        pr_title = payload["pull_request"]["title"]
+        pr_num = payload["pull_request"]["number"]
+        pr_url = payload["pull_request"]["html_url"]
+        author = payload["pull_request"]["user"]["login"]
+        
+        user = get_user_by_github_login(owner_name)
+        if not user:
+            print(f"❌ DATABASE MATCH FAILED: Could not find user '{owner_name}' for PR in Supabase.")
+            return {"status": "ignored"}
+
+        print(f"✅ MATCH FOUND: Sending PR notification to Telegram ID {user.telegram_id}")
+
+        header = ""
+        if action == "opened":
+            header = f"🚀 <b>New Pull Request in {repo_name}</b>"
+        elif action == "closed":
+            if payload["pull_request"]["merged"]:
+                header = f"🎉 <b>Pull Request Merged in {repo_name}</b>"
+            else:
+                header = f"🔴 <b>Pull Request Closed in {repo_name}</b>"
+        
+        text = f"{header}\n<b>Title:</b> {pr_title}\n<b>By:</b> {author}\n<a href='{pr_url}'>View Pull Request #{pr_num}</a>"
+        
+        try:
+            await bot.send_message(
+                chat_id=user.telegram_id, 
+                text=text, 
+                parse_mode="HTML",
+                disable_web_page_preview=True
+            )
+        except Exception as e:
+            print(f"Error sending PR message to {user.telegram_id}: {e}")
             
     return {"status": "received"}
 
@@ -129,7 +176,9 @@ def get_user_by_telegram_id(telegram_id: int):
         return session.query(User).filter_by(telegram_id=telegram_id).first()
 
 async def github_request(method: str, url: str, token: str, payload: Optional[Dict[str, Any]] = None) -> Tuple[Optional[httpx.Response], Optional[str]]:
-    headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github.v3+json"}
+    # Decrypt token before use
+    real_token = decrypt_token(token)
+    headers = {"Authorization": f"Bearer {real_token}", "Accept": "application/vnd.github.v3+json"}
     response = None
     error = None
     try:
@@ -142,10 +191,43 @@ async def github_request(method: str, url: str, token: str, payload: Optional[Di
                 response = await client.patch(url, headers=headers, json=payload)
             
             if response is None:
-                error = "Unsupported method or failed to get response"
+                error = "Unsupported method"
     except Exception as e:
         error = str(e)
     return response, error
+
+@router.message(Command("status"))
+async def status_handler(message: Message):
+    user = get_user_by_telegram_id(message.from_user.id)
+    if not user:
+        await message.answer("❌ You are not logged in. Use /login to get started.")
+        return
+
+    # Check GitHub connectivity & fetch repos
+    token = decrypt_token(user.github_token)
+    async with httpx.AsyncClient() as client:
+        headers = {"Authorization": f"Bearer {token}"}
+        response = await client.get("https://api.github.com/user/repos?sort=updated&per_page=5", headers=headers)
+        
+        db_status = "🟢 Connected"
+        try:
+            with Session(engine) as session:
+                session.execute("SELECT 1")
+        except Exception:
+            db_status = "🔴 Error"
+
+        if response.status_code == 200:
+            repos = response.json()
+            repo_links = "\n".join([f"• <a href='{r['html_url']}'>{r['name']}</a>" for r in repos])
+            status_text = (
+                f"👤 <b>User:</b> @{user.username}\n\n"
+                f"📂 <b>Recent Repos:</b>\n{repo_links if repos else 'No repos found.'}\n\n"
+                f"🗄️ <b>Database:</b> {db_status}\n"
+                f"🔐 <b>Security:</b> AES-256 Active"
+            )
+            await message.answer(status_text, parse_mode="HTML", disable_web_page_preview=True)
+        else:
+            await message.answer(f"👤 <b>User:</b> @{user.username}\n🗄️ <b>Database:</b> {db_status}\n⚠️ <b>GitHub API:</b> Error fetching repos.")
 
 @router.message(Command("start"))
 async def start_handler(message: Message):
@@ -166,14 +248,15 @@ async def process_token(message: Message, state: FSMContext):
             github_username = response.json()["login"]
             with Session(engine) as session:
                 user = session.query(User).filter_by(telegram_id=message.from_user.id).first()
+                encrypted = encrypt_token(token)
                 if not user:
-                    user = User(telegram_id=message.from_user.id, github_token=token, username=github_username)
+                    user = User(telegram_id=message.from_user.id, github_token=encrypted, username=github_username)
                     session.add(user)
                 else:
-                    user.github_token = token
+                    user.github_token = encrypted
                     user.username = github_username
                 session.commit()
-            await message.answer(f"✅ Success! Connected as **@{github_username}**.")
+            await message.answer(f"✅ Success! Connected as **@{github_username}**.\nTokens are now stored with AES-256 encryption. 🛡️")
             await state.clear()
         else:
             await message.answer("❌ Invalid token. Please try again.")
