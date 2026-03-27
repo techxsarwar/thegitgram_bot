@@ -6,3 +6,4 @@ uvicorn
 sqlalchemy
 databases
 aiosqlite
+psycopg2-binary

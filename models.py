@@ -11,10 +11,22 @@ class User(Base):
     github_token = Column(String)  # We'll store it as a string for now as per instructions
     username = Column(String)
 
-# Database URL - SQLite for local testing
-DATABASE_URL = "sqlite:///./thegitgram.db"
+import os
 
-engine = create_engine(DATABASE_URL)
+# Database URL - Fallback to SQLite if DATABASE_URL is not set
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./thegitgram.db")
+
+# 1. Fix the 'postgres://' vs 'postgresql://' issue for SQLAlchemy
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# 2. Add 'pool_pre_ping' and 'pool_recycle' for pooling (PgBouncer friendly)
+# Note: SQLite doesn't support pooling in the same way, but it's safe to keep these args
+engine = create_engine(
+    DATABASE_URL, 
+    pool_pre_ping=True, 
+    pool_recycle=300
+)
 
 def init_db():
     Base.metadata.create_all(bind=engine)
