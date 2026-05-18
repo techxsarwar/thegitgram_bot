@@ -24,11 +24,11 @@
     --mono: 'JetBrains Mono', monospace;
     --display: 'Syne', sans-serif;
   }
-
+ 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html { scroll-behavior: smooth; }
-
+ 
   body {
     background: var(--bg);
     color: var(--text);
@@ -37,7 +37,7 @@
     line-height: 1.7;
     overflow-x: hidden;
   }
-
+ 
   /* GRID BACKGROUND */
   body::before {
     content: '';
@@ -50,7 +50,7 @@
     pointer-events: none;
     z-index: 0;
   }
-
+ 
   /* SCAN LINE */
   body::after {
     content: '';
@@ -65,20 +65,20 @@
     pointer-events: none;
     z-index: 0;
   }
-
+ 
   @keyframes scan {
     to { top: 100%; }
   }
-
+ 
   .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
-
+ 
   /* HERO */
   .hero {
     padding: 80px 0 60px;
     text-align: center;
     position: relative;
   }
-
+ 
   .hero-glow {
     position: absolute;
     top: 50%;
@@ -89,7 +89,7 @@
     background: radial-gradient(ellipse, rgba(41,182,246,0.12) 0%, transparent 70%);
     pointer-events: none;
   }
-
+ 
   .badge-row {
     display: flex;
     gap: 8px;
@@ -97,7 +97,7 @@
     flex-wrap: wrap;
     margin-bottom: 28px;
   }
-
+ 
   .badge {
     font-family: var(--mono);
     font-size: 11px;
@@ -108,17 +108,17 @@
     opacity: 0;
     animation: fadein 0.5s forwards;
   }
-
+ 
   .badge-tg { background: rgba(41,182,246,0.1); border-color: rgba(41,182,246,0.4); color: var(--tg); animation-delay: 0.2s; }
   .badge-gh { background: rgba(126,231,135,0.1); border-color: rgba(126,231,135,0.4); color: var(--gh); animation-delay: 0.35s; }
   .badge-py { background: rgba(240,165,0,0.1); border-color: rgba(240,165,0,0.4); color: var(--amber); animation-delay: 0.5s; }
   .badge-mit { background: rgba(255,255,255,0.05); border-color: var(--border2); color: var(--muted); animation-delay: 0.65s; }
-
+ 
   @keyframes fadein {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
+ 
   .hero-logo {
     font-family: var(--display);
     font-size: clamp(52px, 8vw, 90px);
@@ -129,10 +129,10 @@
     opacity: 0;
     animation: fadein 0.6s 0.1s forwards;
   }
-
+ 
   .hero-logo .tg { color: var(--tg); }
   .hero-logo .gh { color: var(--gh); }
-
+ 
   .hero-sub {
     font-family: var(--mono);
     font-size: 13px;
@@ -143,7 +143,7 @@
     opacity: 0;
     animation: fadein 0.6s 0.3s forwards;
   }
-
+ 
   .hero-desc {
     font-size: 15px;
     color: var(--text2);
@@ -153,7 +153,7 @@
     animation: fadein 0.6s 0.5s forwards;
     line-height: 1.8;
   }
-
+ 
   .hero-btns {
     display: flex;
     gap: 12px;
@@ -162,7 +162,7 @@
     opacity: 0;
     animation: fadein 0.6s 0.7s forwards;
   }
-
+ 
   .btn {
     font-family: var(--mono);
     font-size: 12px;
@@ -174,24 +174,24 @@
     cursor: pointer;
     border: 1px solid;
   }
-
+ 
   .btn-primary {
     background: var(--tg);
     color: #080c10;
     border-color: var(--tg);
     font-weight: 700;
   }
-
+ 
   .btn-primary:hover { background: #1de9b6; border-color: #1de9b6; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(41,182,246,0.3); }
-
+ 
   .btn-secondary {
     background: transparent;
     color: var(--text);
     border-color: var(--border2);
   }
-
+ 
   .btn-secondary:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
-
+ 
   /* TERMINAL CARD */
   .terminal {
     background: var(--bg2);
@@ -202,7 +202,7 @@
     opacity: 0;
     animation: fadein 0.7s 0.9s forwards;
   }
-
+ 
   .terminal-bar {
     background: #1a2030;
     padding: 10px 16px;
@@ -211,16 +211,16 @@
     gap: 10px;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .dot { width: 10px; height: 10px; border-radius: 50%; }
   .dot-red { background: #f85149; }
   .dot-amber { background: #f0a500; }
   .dot-green { background: #7ee787; }
-
+ 
   .terminal-title { font-size: 11px; color: var(--muted); margin-left: auto; letter-spacing: 0.08em; }
-
+ 
   .terminal-body { padding: 20px 24px; font-size: 13px; line-height: 2; }
-
+ 
   .line { display: flex; align-items: flex-start; gap: 8px; }
   .prompt { color: var(--tg); user-select: none; flex-shrink: 0; }
   .cmd { color: var(--text); }
@@ -228,7 +228,7 @@
   .out.green { color: var(--gh); }
   .out.blue { color: var(--tg); }
   .out.amber { color: var(--amber); }
-
+ 
   .cursor {
     display: inline-block;
     width: 8px;
@@ -238,9 +238,9 @@
     vertical-align: text-bottom;
     margin-left: 2px;
   }
-
+ 
   @keyframes blink { 50% { opacity: 0; } }
-
+ 
   /* DIVIDER */
   .divider {
     display: flex;
@@ -248,13 +248,13 @@
     gap: 16px;
     margin: 56px 0 40px;
   }
-
+ 
   .divider-line { flex: 1; height: 1px; background: var(--border); }
   .divider-label { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
-
+ 
   /* FEATURE GRID */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 48px; }
-
+ 
   .card {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -266,7 +266,7 @@
     position: relative;
     overflow: hidden;
   }
-
+ 
   .card::before {
     content: '';
     position: absolute;
@@ -275,22 +275,22 @@
     opacity: 0;
     transition: opacity 0.3s;
   }
-
+ 
   .card:hover { border-color: var(--border2); transform: translateY(-3px); background: var(--bg3); }
   .card:hover::before { opacity: 1; }
-
+ 
   .card-tg::before { background: linear-gradient(90deg, var(--tg), transparent); }
   .card-gh::before { background: linear-gradient(90deg, var(--gh), transparent); }
   .card-amber::before { background: linear-gradient(90deg, var(--amber), transparent); }
   .card-red::before { background: linear-gradient(90deg, var(--red), transparent); }
-
+ 
   .card-icon { font-size: 22px; margin-bottom: 12px; }
   .card-title { font-family: var(--display); font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
   .card-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
   .card-items { margin-top: 12px; list-style: none; }
   .card-items li { font-size: 12px; color: var(--muted); padding: 2px 0; }
   .card-items li::before { content: '→ '; color: var(--tg); }
-
+ 
   /* ARCH */
   .arch-block {
     background: var(--bg2);
@@ -300,14 +300,14 @@
     margin-bottom: 48px;
     font-size: 13px;
   }
-
+ 
   .arch-flow {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0;
   }
-
+ 
   .arch-node {
     background: var(--bg3);
     border: 1px solid var(--border2);
@@ -321,12 +321,12 @@
     transition: all 0.25s;
     position: relative;
   }
-
+ 
   .arch-node:hover { border-color: var(--tg); color: var(--tg); box-shadow: 0 0 16px rgba(41,182,246,0.15); }
-
+ 
   .arch-node.tg-node { border-color: rgba(41,182,246,0.4); color: var(--tg); }
   .arch-node.gh-node { border-color: rgba(126,231,135,0.4); color: var(--gh); }
-
+ 
   .arch-arrow {
     width: 1px;
     height: 28px;
@@ -334,7 +334,7 @@
     position: relative;
     flex-shrink: 0;
   }
-
+ 
   .arch-arrow::after {
     content: '▼';
     position: absolute;
@@ -344,7 +344,7 @@
     font-size: 8px;
     color: var(--tg);
   }
-
+ 
   .arch-label {
     font-size: 10px;
     color: var(--muted);
@@ -356,7 +356,7 @@
     transform: translateY(-50%);
     white-space: nowrap;
   }
-
+ 
   /* TECH TABLE */
   .tech-table {
     width: 100%;
@@ -364,7 +364,7 @@
     font-size: 13px;
     margin-bottom: 48px;
   }
-
+ 
   .tech-table th {
     text-align: left;
     padding: 10px 16px;
@@ -374,15 +374,15 @@
     color: var(--muted);
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .tech-table td {
     padding: 12px 16px;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .tech-table tr:last-child td { border-bottom: none; }
   .tech-table tr:hover td { background: rgba(255,255,255,0.02); }
-
+ 
   .tech-table .layer { color: var(--muted); font-size: 12px; }
   .tech-table .tech { color: var(--text); font-weight: 600; }
   .tech-table .pill {
@@ -396,7 +396,7 @@
   .pill-gh { background: rgba(126,231,135,0.1); border-color: rgba(126,231,135,0.3); color: var(--gh); }
   .pill-amber { background: rgba(240,165,0,0.1); border-color: rgba(240,165,0,0.3); color: var(--amber); }
   .pill-gray { background: rgba(255,255,255,0.05); border-color: var(--border2); color: var(--muted); }
-
+ 
   /* CMD TABLE */
   .cmd-table {
     width: 100%;
@@ -408,7 +408,7 @@
     border-radius: 10px;
     overflow: hidden;
   }
-
+ 
   .cmd-table th {
     padding: 12px 20px;
     text-align: left;
@@ -419,11 +419,11 @@
     background: #1a2030;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .cmd-table td { padding: 13px 20px; border-bottom: 1px solid var(--border); }
   .cmd-table tr:last-child td { border-bottom: none; }
   .cmd-table tr:hover td { background: rgba(255,255,255,0.02); }
-
+ 
   .cmd-tag {
     font-family: var(--mono);
     font-size: 12px;
@@ -434,23 +434,23 @@
     border: 1px solid rgba(41,182,246,0.2);
     white-space: nowrap;
   }
-
+ 
   /* WORKFLOW */
   .workflow { display: flex; flex-direction: column; gap: 0; margin-bottom: 48px; }
-
+ 
   .wf-step {
     display: flex;
     gap: 20px;
     align-items: flex-start;
   }
-
+ 
   .wf-left {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex-shrink: 0;
   }
-
+ 
   .wf-num {
     width: 32px;
     height: 32px;
@@ -466,9 +466,9 @@
     flex-shrink: 0;
     z-index: 1;
   }
-
+ 
   .wf-line { width: 1px; flex: 1; min-height: 32px; background: var(--border); margin: 4px 0; }
-
+ 
   .wf-content {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -478,7 +478,7 @@
     flex: 1;
     transition: border-color 0.2s;
   }
-
+ 
   .wf-content:hover { border-color: var(--border2); }
   .wf-title { font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
   .wf-body { font-size: 12px; color: var(--muted); }
@@ -491,7 +491,7 @@
     font-size: 12px;
     color: var(--tg);
   }
-
+ 
   /* NOTIFICATION PREVIEW */
   .notif {
     background: var(--bg2);
@@ -503,14 +503,14 @@
     gap: 14px;
     margin-top: 8px;
   }
-
+ 
   .notif-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-
+ 
   .notif-title { font-weight: 700; font-size: 13px; color: var(--text); margin-bottom: 2px; }
   .notif-body { font-size: 12px; color: var(--muted); }
   .notif-repo { color: var(--tg); }
   .notif-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
-
+ 
   /* ROADMAP */
   .roadmap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 48px; }
   .rm-item {
@@ -528,7 +528,7 @@
   .rm-item:hover { border-color: var(--border2); transform: translateX(3px); }
   .rm-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--tg); flex-shrink: 0; }
   .rm-dot.done { background: var(--gh); }
-
+ 
   /* SECURITY */
   .security-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 48px; }
   .sec-item {
@@ -540,7 +540,7 @@
   }
   .sec-icon { color: var(--red); font-size: 16px; margin-bottom: 8px; }
   .sec-text { color: var(--muted); }
-
+ 
   /* INSTALL */
   .install-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 48px; }
   .install-step {
@@ -577,7 +577,7 @@
   }
   .install-code { padding: 14px 20px; font-size: 12px; color: var(--gh); }
   .install-code span { color: var(--muted); }
-
+ 
   /* FOOTER */
   .footer {
     margin-top: 80px;
@@ -585,7 +585,7 @@
     padding-top: 40px;
     text-align: center;
   }
-
+ 
   .footer-name {
     font-family: var(--display);
     font-size: 22px;
@@ -593,9 +593,9 @@
     color: var(--text);
     margin-bottom: 4px;
   }
-
+ 
   .footer-tagline { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; }
-
+ 
   .footer-vision {
     margin: 24px auto;
     max-width: 480px;
@@ -605,9 +605,9 @@
     padding-left: 16px;
     text-align: left;
   }
-
+ 
   .footer-vision strong { color: var(--text); }
-
+ 
   .footer-links { display: flex; gap: 16px; justify-content: center; margin-top: 24px; }
   .footer-links a {
     font-size: 12px;
@@ -617,9 +617,9 @@
     letter-spacing: 0.06em;
   }
   .footer-links a:hover { color: var(--tg); }
-
+ 
   .footer-copy { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 32px; letter-spacing: 0.08em; }
-
+ 
   /* SECTION TITLE */
   .sec-title {
     font-family: var(--display);
@@ -628,21 +628,21 @@
     margin-bottom: 20px;
     letter-spacing: -0.5px;
   }
-
+ 
   .sec-title span { color: var(--tg); }
-
+ 
   /* PULSE ANIMATION for cards */
   @keyframes pulse-border {
     0%, 100% { box-shadow: 0 0 0 0 rgba(41,182,246,0); }
     50% { box-shadow: 0 0 0 4px rgba(41,182,246,0.06); }
   }
-
+ 
   /* STAGGER HELPERS */
   .card:nth-child(1) { animation-delay: 0.1s; }
   .card:nth-child(2) { animation-delay: 0.2s; }
   .card:nth-child(3) { animation-delay: 0.3s; }
   .card:nth-child(4) { animation-delay: 0.4s; }
-
+ 
   /* SCROLLED IN */
   .scroll-reveal {
     opacity: 0;
@@ -650,7 +650,7 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
   .scroll-reveal.visible { opacity: 1; transform: none; }
-
+ 
   @media (max-width: 600px) {
     .roadmap { grid-template-columns: 1fr; }
     .hero-logo { font-size: 48px; }
@@ -659,9 +659,9 @@
 </style>
 </head>
 <body>
-
+ 
 <div class="wrapper">
-
+ 
   <!-- HERO -->
   <div class="hero">
     <div class="hero-glow"></div>
@@ -684,7 +684,7 @@
       <a class="btn btn-secondary" href="#features">See Features →</a>
     </div>
   </div>
-
+ 
   <!-- TERMINAL -->
   <div class="terminal">
     <div class="terminal-bar">
@@ -706,7 +706,7 @@
       <div class="line"><span class="prompt">$</span><span class="cmd">/close 42<span class="cursor"></span></span></div>
     </div>
   </div>
-
+ 
   <!-- FEATURES -->
   <div id="features">
     <div class="divider">
@@ -714,7 +714,7 @@
       <div class="divider-label">Features</div>
       <div class="divider-line"></div>
     </div>
-
+ 
     <div class="grid">
       <div class="card card-tg">
         <div class="card-icon">📡</div>
@@ -760,14 +760,14 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- ARCHITECTURE -->
   <div class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Architecture</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <div class="arch-block scroll-reveal">
     <div class="arch-flow">
       <div class="arch-node tg-node">Telegram Bot</div>
@@ -779,14 +779,14 @@
       <div class="arch-node" style="color:var(--amber); border-color:rgba(240,165,0,0.4);">SQLite / DB</div>
     </div>
   </div>
-
+ 
   <!-- TECH STACK -->
   <div class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Tech Stack</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <table class="tech-table scroll-reveal">
     <thead>
       <tr>
@@ -833,14 +833,14 @@
       </tr>
     </tbody>
   </table>
-
+ 
   <!-- COMMANDS -->
   <div class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Commands</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <table class="cmd-table scroll-reveal">
     <thead>
       <tr>
@@ -875,14 +875,14 @@
       </tr>
     </tbody>
   </table>
-
+ 
   <!-- WORKFLOW -->
   <div class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Example Workflow</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <div class="workflow scroll-reveal">
     <div class="wf-step">
       <div class="wf-left">
@@ -895,7 +895,7 @@
         <div class="wf-code">/connect</div>
       </div>
     </div>
-
+ 
     <div class="wf-step">
       <div class="wf-left">
         <div class="wf-num">2</div>
@@ -915,7 +915,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="wf-step">
       <div class="wf-left">
         <div class="wf-num">3</div>
@@ -927,14 +927,14 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- INSTALL -->
   <div id="install" class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Installation</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <div class="install-steps scroll-reveal">
     <div class="install-step">
       <div class="install-header"><span class="step-n">1</span> Clone Repository</div>
@@ -963,14 +963,14 @@
       <div class="install-code">python main.py</div>
     </div>
   </div>
-
+ 
   <!-- SECURITY -->
   <div class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Security Notes</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <div class="security-grid scroll-reveal">
     <div class="sec-item">
       <div class="sec-icon">🔒</div>
@@ -997,14 +997,14 @@
       <div class="sec-text">Never store PATs in plain text — ever</div>
     </div>
   </div>
-
+ 
   <!-- ROADMAP -->
   <div class="divider scroll-reveal">
     <div class="divider-line"></div>
     <div class="divider-label">Roadmap</div>
     <div class="divider-line"></div>
   </div>
-
+ 
   <div class="roadmap scroll-reveal">
     <div class="rm-item"><span class="rm-dot done"></span>Real-time issue notifications</div>
     <div class="rm-item"><span class="rm-dot done"></span>Close / reopen issues from Telegram</div>
@@ -1019,7 +1019,7 @@
     <div class="rm-item"><span class="rm-dot"></span>Multi-repository dashboards</div>
     <div class="rm-item"><span class="rm-dot"></span>GitHub App integration</div>
   </div>
-
+ 
   <!-- FOOTER -->
   <div class="footer scroll-reveal">
     <div class="footer-name">Sarwar Altaf Dar</div>
@@ -1035,9 +1035,9 @@
     </div>
     <div class="footer-copy">© 2025 GitGram · Fast. Minimal. Developer-first.</div>
   </div>
-
+ 
 </div>
-
+ 
 <script>
   const reveals = document.querySelectorAll('.scroll-reveal');
   const obs = new IntersectionObserver(entries => {
@@ -1050,6 +1050,7 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(el => obs.observe(el));
 </script>
-
+ 
 </body>
 </html>
+ 
